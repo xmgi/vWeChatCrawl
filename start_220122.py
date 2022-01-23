@@ -189,10 +189,13 @@ def DownHtmlMain(jsonDir,saveHtmlDir):
             print("exists",arthtmlsavepath)
             continue
         arthtmlstr = DownLoadHtml(art.url)
-        arthtmlstr = ChangeImgSrc(arthtmlstr,saveImgDir,artname)
-        print("\r",end="")
-        SaveFile(arthtmlsavepath,arthtmlstr)
-
+        try:
+            arthtmlstr = ChangeImgSrc(arthtmlstr,saveImgDir,artname)
+            print("\r",end="")
+            SaveFile(arthtmlsavepath,arthtmlstr)
+        except:
+            print('something wrong, skip')
+            
         sleep(3) #防止下载过快被微信屏蔽，间隔3秒下载一篇
 
 #把一个文件夹下的html文件都转为pdf
@@ -258,6 +261,7 @@ def PDFOne(htmlpath,pdfpath,skipExists=True,removehtml=True):
             运行 python start.py pdf  #把下载的html转pdf 
     """
 if __name__ == "__main__":
+# sys.argv is a list get from user input, sys.argv[0] stands the py file itself
     if len(sys.argv)==1:
         arg = None
     else:
@@ -266,9 +270,7 @@ if __name__ == "__main__":
         jsbd = GetJson()
         saveHtmlDir = jsbd["htmlDir"]
         jsdir= jsbd["jsonDir"]
-
         DownHtmlMain(jsdir,saveHtmlDir)
-        
     elif arg == "pdf":
         jsbd = GetJson()
         saveHtmlDir = jsbd["htmlDir"]
